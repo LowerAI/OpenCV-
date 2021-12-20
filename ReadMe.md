@@ -121,3 +121,16 @@ API知识点
 + 色彩空间转换cvtColor
 + 提取指定色彩范围区域InRange
 ```
+
+## P14 013-图像像素值统计
+```
+知识点：像素值统计
++ 最小(min)
++ 最大(max)
++ 均值(mean)
++ 标准方差(standard deviation)
+
+API知识点
++ 最大最小值
++ 计算均值与标准方差meanStdDev
+```

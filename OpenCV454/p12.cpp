@@ -7,7 +7,7 @@
 using namespace cv;
 using namespace std;
 
-int main()
+int main12()
 {
     Mat src = imread(picpath); // 以灰度模式加载图片
     if (src.empty())

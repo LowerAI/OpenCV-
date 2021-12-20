@@ -157,10 +157,19 @@
     <ClCompile Include="p11.cpp" />
     <ClCompile Include="p12.cpp" />
     <ClCompile Include="p13.cpp" />
+    <ClCompile Include="p14.cpp" />
     <ClCompile Include="quickdemo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="quickopencv.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="tr_12201152.png" />
+    <Image Include="全绿背景的人像.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OpenCV454.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 
 #define picpath "F:/tr_12201152.png"
+#define portraitpath "F:/È«ÂÌ±³¾°µÄÈËÏñ.jpg"
 
 using namespace cv;
 
@@ -20,6 +21,7 @@ public:
 	void color_style_demo(Mat& image);
 	void bitwise_demo(Mat& image);
 	void channels_demo(Mat& image);
+	void inrange_demo(Mat& image);
 private:
 
 };

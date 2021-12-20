@@ -347,3 +347,25 @@ void QuickDemo::channels_demo(Mat& image)
     mixChannels(&image, 1, &dst, 1, from_to, 3);
     imshow("通道混合", dst);
 }
+
+/// <summary>
+/// 色彩空间转换
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::inrange_demo(Mat& image)
+{
+#pragma region    背景全白，人像全黑(针对背景全绿的图片有效)
+    Mat hsv;
+    cvtColor(image, hsv, COLOR_BGR2HSV);
+    Mat mask;
+    inRange(hsv, Scalar(35,43,46), Scalar(77,255,255), mask);
+    imshow("mask", mask);
+#pragma endregion
+
+    Mat redback = Mat::zeros(image.size(), image.type());
+    redback = Scalar(40, 40, 200);
+    bitwise_not(mask, mask); // 把上面的结果变成背景全黑，人像全白
+    imshow("mask", mask);
+    image.copyTo(redback, mask); // 把红色背景替换白色背景
+    imshow("roi区域提权", redback);
+}
