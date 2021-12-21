@@ -3,7 +3,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#define picpath "F:/tr_12201152.png"
+#define picpath "F:/tr_12211734.png"
 #define portraitpath "F:/È«ÂÌ±³¾°µÄÈËÏñ.jpg"
 
 using namespace cv;
@@ -22,6 +22,11 @@ public:
 	void bitwise_demo(Mat& image);
 	void channels_demo(Mat& image);
 	void inrange_demo(Mat& image);
-private:
+	void pixel_statistic_demo8(Mat& image);
+	void drawing_demo(Mat& image);
+	void random_drawing_demo(Mat& image);
+	void polyline_drawing_demo(Mat& image);
+	void mouse_drawing_demo(Mat& image);
+//private:
 
 };

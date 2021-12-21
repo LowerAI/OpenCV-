@@ -158,6 +158,11 @@
     <ClCompile Include="p12.cpp" />
     <ClCompile Include="p13.cpp" />
     <ClCompile Include="p14.cpp" />
+    <ClCompile Include="p15.cpp" />
+    <ClCompile Include="p16.cpp" />
+    <ClCompile Include="p17.cpp" />
+    <ClCompile Include="p18.cpp" />
+    <ClCompile Include="p19.cpp" />
     <ClCompile Include="quickdemo.cpp" />
   </ItemGroup>
   <ItemGroup>
