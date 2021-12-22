@@ -4,7 +4,8 @@
 #include <opencv2/opencv.hpp>
 
 #define picpath "F:/tr_12221053.png"
-#define portraitpath "F:/全绿背景的人像.jpg"
+#define portraitpath "F:/美女演示图0.png"
+#define portraitpath1 "F:/全绿背景的人像.jpg"
 
 using namespace cv;
 
@@ -37,4 +38,6 @@ public:
 	void histogram_2d_demo(Mat& image);
 	void histogram_eq_demo(Mat& image);
 	void blur_demo(Mat& image);
+	void gaussian_blur_demo(Mat& image);
+	void bifilter_demo(Mat& image);
 };

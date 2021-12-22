@@ -7,7 +7,7 @@
 using namespace cv;
 using namespace std;
 
-int main29()
+int main()
 {
     Mat src = imread(portraitpath); // 以灰度模式加载图片
     if (src.empty())
@@ -19,7 +19,7 @@ int main29()
     imshow("input", src);
 
     QuickDemo qd;
-    qd.gaussian_blur_demo(src);
+    qd.pixel_visit_demo(src);
 
     waitKey(0);
     destroyAllWindows();

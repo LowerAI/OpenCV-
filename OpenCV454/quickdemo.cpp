@@ -817,6 +817,28 @@ void QuickDemo::histogram_eq_demo(Mat& image)
 void QuickDemo::blur_demo(Mat& image)
 {
     Mat dst;
-    blur(image, dst, Size(5, 5));
+    blur(image, dst, Size(5, 5)); // 其中的anchor的宽高最好是奇数，否则无法在矩阵中找到中心点
     imshow("图像模糊", dst);
+}
+
+/// <summary>
+/// 高斯模糊
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::gaussian_blur_demo(Mat& image)
+{
+    Mat dst;
+    GaussianBlur(image, dst, Size(3, 3),15);// 如果anchor没有设置(值为Size(-1,-1))或者为0(值为Size(0,0))则OpenCV通过sigmaX和sigmaY来反推卷积矩阵的大小，一旦anchor值正常则sigmaX/sigmaY无效
+    imshow("高斯模糊", dst);
+}
+
+/// <summary>
+/// 高斯双边模糊
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::bifilter_demo(Mat& image)
+{
+    Mat dst;
+    bilateralFilter(image, dst, 0, 100, 10);
+    imshow("高斯双边模糊", dst);
 }
