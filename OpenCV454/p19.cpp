@@ -19,7 +19,7 @@ int main19()
     imshow("input", src);
 
     QuickDemo qd;
-    qd.pixel_visit_demo(src);
+    qd.norm_demo(src);
 
     waitKey(0);
     destroyAllWindows();

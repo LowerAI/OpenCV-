@@ -3,7 +3,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#define picpath "F:/tr_12211734.png"
+#define picpath "F:/tr_12221053.png"
 #define portraitpath "F:/È«ÂÌ±³¾°µÄÈËÏñ.jpg"
 
 using namespace cv;
@@ -27,6 +27,14 @@ public:
 	void random_drawing_demo(Mat& image);
 	void polyline_drawing_demo(Mat& image);
 	void mouse_drawing_demo(Mat& image);
-//private:
-
+	void norm_demo(Mat& image);
+	void resize_demo(Mat& image);
+	void flip_demo(Mat& image);
+	void rotate_demo(Mat& image);
+	void viedo_demo1(Mat& image);
+	void viedo_demo2(Mat& image);
+	void histogram_demo(Mat& image);
+	void histogram_2d_demo(Mat& image);
+	void histogram_eq_demo(Mat& image);
+	void blur_demo(Mat& image);
 };

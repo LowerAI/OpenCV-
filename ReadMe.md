@@ -144,3 +144,102 @@ API知识点
 ## P18 017-鼠标操作与响应
 
 ## P19 018-图像像素类型转换与归一化
+```
+归一化：把图像像素的值范围从0~255压缩到0~1之间(压缩图像大小？？)
+
+OpenCV提供了四种归一化的方法
+- NORM_MINMAX
+- NORM_INF
+- NORM_L1
+- NORM_L2
+最常用的就是NORM_MINMAX归一化方法
+
+相关API函数
+normalize(
+	InputArray        src, // 输入图像
+	InputOutputArray  dst, // 输出图像
+	double            alpha = 1, // NORM_MINMAX时候低值
+	double            beta = 0, // NORM_MINMAX时候高值
+	int               norm_type = NORM_L2, // 只有alpha
+	int               dttype, // 默认类型与src一致
+	InputArray        mask = noArray() // mask默认值为空
+)
+```
+
+## P20 019-图像放缩与插值
+```
+图像插值(Image Interpolation)
+最常见的四种插值算法
+INTER_NEAREST = 0
+INTER_LINEAR = 1
+INTER_CUBIC = 2
+INTER_LANCZOS = 4
+相关的应用场景
+几何变换、透视变换、插值计算新像素
+resize,
+如果size有值，使用size坐缩放插值，否则根据fx与fy卷积。
+
+关于这四种插值算法的详细代码实现与解释
+图像处理之三种常见双立方插值算法 - CSDN博客
+图像放缩之双立方插值 - CSDN博客
+图像放缩之双线性内插值 - CSDN博客
+图像处理之Lanczos4采样放缩算法 - CSDN博客
+```
+
+## P21 020-图像翻转
+
+## P22 021-图像旋转
+
+## P23 022-视频文件摄像头使用
+
+## P24 023-视频处理与保存
+```
+SD 标准清晰度
+HD 高清
+
+UHD 超高清晰度
+```
+
+## P25 024-图像直方图
+```
+直方图的解释：
+图像直方图时图像像素值的统计学特征、计算代价较小，具有图像平缓、旋转、缩放不变性等众多优点，广泛第应用了图像处理的各个领域，特别时灰度图像的阈值分割、基于颜色的图像检索以及图像分类，反向投影跟踪。常见的分为
+- 灰度直方图
+- 颜色直方图
+
+Bins是指直方图的大小范围，对于像素值取值在0~255之间的，最少右256个bin，此外还可以有16，32，48，128等，256除以bin的大小应该是整数倍
+
+OpenCV中相关API
+calcHist(&bgr_plane[0],1,0,Mat(),b_hist,1,bins,ranges);
+cv.calcHist([image],[i],None,[256],[0,256])
+```
+
+## P26 025-二维直方图
+
+
+## P27 026-直方图均衡化
+```
+图像直方图均衡化
+
+图像直方图均衡化可以用于图像增强，对输入图像进行直方图均衡化处理，提升后续对象检测得准确率。在OpenCV人脸检测得代码演示中已经很常见，此外对医学影响图像与卫星遥感图像也经常通过直方图均衡化来提升图像质量。
+
+OpenCV中直方图均衡化得API很简单
+- equalizeHist(src,dst)
+```
+
+
+## P28 027-图像卷积操作
+```
+图像卷积可以看成是一个窗口区域在另外一个大的图像上移动，对每个窗口覆盖的区域都进行点乘得到的值作为中心像素点的输出值。窗口的移动式从左到右，从上到下。窗口可以理解成一个指定大小的二维矩阵，里面有预先指定的值。
+
+相关API(C++)
+-blur(
+	InputArray    src, // 输入
+	OutputArray   dst, // 输出
+	Size          ksize, // 窗口大小
+	Point         anchor = Point(-1,-1), // 默认值
+	int           borderType = BORDER_DEFAULT // 默认值
+)
+```
+
+## P29 028-高斯模糊

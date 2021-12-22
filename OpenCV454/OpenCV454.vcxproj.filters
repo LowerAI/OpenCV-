@@ -72,6 +72,36 @@
     <ClCompile Include="p19.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="p20.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p21.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p22.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p23.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p24.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p25.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p26.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p27.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p28.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p29.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="quickopencv.h">

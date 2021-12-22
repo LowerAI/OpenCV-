@@ -569,3 +569,254 @@ void QuickDemo::mouse_drawing_demo(Mat& image)
     imshow("鼠标绘制", image);
     temp = image.clone(); // 缓存原图(没有上次绘制遗留的痕迹)
 }
+
+/// <summary>
+/// 图像像素类型转换与归一化
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::norm_demo(Mat& image)
+{
+    Mat dst;
+    cout << image.type() << endl;
+    image.convertTo(dst, CV_32F); // 像素类型转换：从CV_8UC3转换为CV_32FC3
+    //cout << dst.type() << endl;
+    //normalize(image, dst, 1.0, 0, NORM_MINMAX); // 归一化
+    cout << dst.type() << endl;
+    imshow("图像数据归一化", dst);
+}
+
+/// <summary>
+/// 图像放缩与插值
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::resize_demo(Mat& image)
+{
+    Mat zoomin, zoomout;
+    int h = image.rows;
+    int w = image.cols;
+    resize(image, zoomin, Size(w / 2, h / 2), 0, 0, INTER_LINEAR); // 缩小到1/2
+    imshow("zoomin", zoomin);
+    resize(image, zoomout, Size(w * 1.5, h * 1.5), 0, 0, INTER_LINEAR); // 放大1.5倍
+    imshow("zoomout", zoomout);
+}
+
+/// <summary>
+/// 图像翻转
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::flip_demo(Mat& image)
+{
+    Mat dst;
+    flip(image, dst, -1); // 对角线翻转(旋转180度)
+    //flip(image, dst, 0); // 上下翻转
+    //flip(image, dst, 1); // 左右翻转
+    imshow("图像翻转", dst);
+}
+
+/// <summary>
+/// 图像旋转
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::rotate_demo(Mat& image)
+{
+    Mat dst, M;
+    int w = image.cols;
+    int h = image.rows;
+    M = getRotationMatrix2D(Point(w / 2, h / 2), 45, 1.0); // 生成平面的变换矩阵(如果直接打印则无内容无大小)
+
+    double cos = abs(M.at<double>(0, 0));
+    double sin = abs(M.at<double>(0, 1));
+    int nw = cos * w + sin * h;
+    int nh = sin * w + cos * h;
+    M.at<double>(0, 2) += nw / 2 - w / 2;
+    M.at<double>(1, 2) += nh / 2 - h / 2;
+
+    //warpAffine(image, dst, M, image.size()); // 底板默认为黑色，如需改变颜色则需改为如下这样
+    warpAffine(image, dst, M, Size(nw, nh), INTER_LINEAR, 0, Scalar(255, 255, 0));
+    imshow("旋转", dst);
+}
+
+/// <summary>
+/// 获取视频流
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::viedo_demo1(Mat& image)
+{
+    //VideoCapture capture; // 无参实例化表示直接读取系统连接的主摄像头
+    VideoCapture capture("F:/非凡公主希瑞S1/非凡公主希瑞.She-Ra.and.the.Princesses.of.Power.S01E05.中英字幕.WEB.720P-人人影视.mp4");
+    Mat frame;
+    while (true)
+    {
+        capture.read(frame);
+        if (frame.empty())
+        {
+            break;
+        }
+        //colorSpace_Demo(frame);
+        imshow("frame", frame);
+        int c = waitKey(1);
+        if (c == 27)
+        {
+            break;
+        }
+    }
+    capture.release(); // 关闭视频流
+}
+
+/// <summary>
+/// 视频文件处理
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::viedo_demo2(Mat& image)
+{
+    VideoCapture capture("F:/非凡公主希瑞S1/非凡公主希瑞.She-Ra.and.the.Princesses.of.Power.S01E05.中英字幕.WEB.720P-人人影视.mp4");
+
+    int frame_width = capture.get(CAP_PROP_FRAME_WIDTH);
+    int frame_height = capture.get(CAP_PROP_FRAME_HEIGHT);
+    int count = capture.get(CAP_PROP_FRAME_COUNT); // 帧数
+    int fps = capture.get(CAP_PROP_FPS); // 帧率
+    cout << "frame width:" << frame_width << endl;
+    cout << "frame height:" << frame_height << endl;
+    cout << "FPS:" << fps << endl;
+    cout << "Number of Frame:" << count << endl;
+    VideoWriter writer("F:/test.mp4", capture.get(CAP_PROP_FOURCC), fps, Size(frame_width,frame_height), true);
+    Mat frame;
+    while (true)
+    {
+        capture.read(frame);
+        if (frame.empty())
+        {
+            break;
+        }
+        //colorSpace_Demo(frame);
+        writer.write(frame);
+        imshow("frame", frame);
+        int c = waitKey(1);
+        if (c == 27)
+        {
+            break;
+        }
+    }
+    capture.release(); // 关闭视频流
+    writer.release();
+}
+
+/// <summary>
+/// 一维直方图
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::histogram_demo(Mat& image)
+{
+    vector<Mat> bgr_plane;
+    split(image, bgr_plane); // 三通道分离
+
+    const int channels[1] = { 0 };
+    const int bins[1] = { 256 };
+    float hranges[2] = { 0,255 };
+    const float* ranges[1] = { hranges };
+    Mat b_hist;
+    Mat g_hist;
+    Mat r_hist;
+
+    // 分别计算蓝、绿、红通道的直方图
+    calcHist(&bgr_plane[0], 1, 0, Mat(), b_hist, 1, bins, ranges);
+    calcHist(&bgr_plane[1], 1, 0, Mat(), g_hist, 1, bins, ranges);
+    calcHist(&bgr_plane[2], 1, 0, Mat(), r_hist, 1, bins, ranges);
+
+    int hist_w = 512;
+    int hist_h = 400;
+    int bin_w = cvRound((double)hist_w / bins[0]);
+    Mat histImage = Mat::zeros(hist_w, hist_h, CV_8UC3);
+
+    // 归一化直方图
+    normalize(b_hist, b_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+    normalize(g_hist, g_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+    normalize(r_hist, r_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+
+    // 绘制直方图曲线
+    for (int i = 1; i < bins[0]; i++)
+    {
+        line(histImage, Point(bin_w * (i - 1), hist_h - cvRound(b_hist.at<float>(i - 1))), Point(bin_w * (i), hist_h - cvRound(b_hist.at<float>(i))), Scalar(255, 0, 0), 2, 8, 0);
+        line(histImage, Point(bin_w * (i - 1), hist_h - cvRound(g_hist.at<float>(i - 1))), Point(bin_w * (i), hist_h - cvRound(g_hist.at<float>(i))), Scalar(0, 255, 0), 2, 8, 0);
+        line(histImage, Point(bin_w * (i - 1), hist_h - cvRound(r_hist.at<float>(i - 1))), Point(bin_w * (i), hist_h - cvRound(r_hist.at<float>(i))), Scalar(0, 0, 255), 2, 8, 0);
+    }
+
+    namedWindow("Histogram Demo", WINDOW_AUTOSIZE);
+    imshow("Histogram Demo", histImage);
+}
+
+/// <summary>
+/// 二维直方图
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::histogram_2d_demo(Mat& image)
+{
+    Mat hsv, hs_hist;
+    cvtColor(image, hsv, COLOR_BGR2HSV);
+
+    int hbins = 30, sbins = 32;
+    int hist_bins[] = { hbins,sbins };
+    float h_range[] = { 0,180 };
+    float s_range[] = { 0,256 };
+    const float* hs_ranges[] = { h_range,s_range };
+    int hs_channels[] = { 0,1 };
+
+    calcHist(&hsv, 1, hs_channels, Mat(), hs_hist, 2, hist_bins, hs_ranges, true, false);
+
+    double maxVal = 0;
+    minMaxLoc(hs_hist, 0, &maxVal, 0, 0);
+    int scale = 10;
+    Mat hist2d_image = Mat::zeros(sbins * scale, hbins * scale, CV_8UC3);
+    for (int h = 0; h < hbins; h++)
+    {
+        for (int s = 0; s < sbins; s++)
+        {
+            float binVal = hs_hist.at<float>(h, s);
+            int intensity = cvRound(binVal * 255 / maxVal);
+            rectangle(hist2d_image, Point(h * scale, s * 256), Point((h + 1) * scale - 1, (s + 1) * 256 - 1), Scalar::all(intensity), -1);
+        }
+    }
+    applyColorMap(hist2d_image, hist2d_image, COLORMAP_JET);
+    imshow("H-S Histogram", hist2d_image);
+    imwrite("F:/hist_2d.png", hist2d_image);
+}
+
+/// <summary>
+/// 直方图均衡化
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::histogram_eq_demo(Mat& image)
+{
+    //Mat gray;
+    //cvtColor(image, gray, COLOR_BGR2GRAY);
+    //imshow("灰度图像", gray);
+    //Mat dst;
+    //equalizeHist(gray, dst); // 注意均衡化得src只接受灰度图
+    //imshow("直方图均衡化演示", dst);
+
+    Mat hsv;
+    cvtColor(image, hsv, COLOR_BGR2HSV);
+    vector<Mat> hsv_channels;
+    split(hsv, hsv_channels);
+    Mat v = hsv_channels.at(2);
+    Mat dst;
+    equalizeHist(v, dst);
+    //int from_to[] = { 0,2,1,1,2,0 };
+    //mixChannels(&image, 1, &dst, 1, from_to, 3);
+    merge(dst, hsv);
+    //dst.release(); // 重置dst
+    //cvtColor(hsv, dst, COLOR_HSV2BGR);
+
+    imshow("直方图均衡化演示", dst);
+}
+
+/// <summary>
+/// 图像卷积
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::blur_demo(Mat& image)
+{
+    Mat dst;
+    blur(image, dst, Size(5, 5));
+    imshow("图像模糊", dst);
+}
