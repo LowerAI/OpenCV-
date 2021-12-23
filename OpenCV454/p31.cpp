@@ -19,7 +19,7 @@ int main()
     imshow("input", src);
 
     QuickDemo qd;
-    qd.pixel_visit_demo(src);
+    qd.face_detection_demo(src);
 
     waitKey(0);
     destroyAllWindows();

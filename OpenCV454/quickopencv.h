@@ -1,9 +1,8 @@
 #pragma once
 
-
 #include <opencv2/opencv.hpp>
 
-#define picpath "F:/tr_12221053.png"
+#define picpath "F:/tr_12231357.png"
 #define portraitpath "F:/美女演示图0.png"
 #define portraitpath1 "F:/全绿背景的人像.jpg"
 
@@ -40,4 +39,5 @@ public:
 	void blur_demo(Mat& image);
 	void gaussian_blur_demo(Mat& image);
 	void bifilter_demo(Mat& image);
+	void face_detection_demo(Mat& image);
 };

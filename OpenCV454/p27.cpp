@@ -9,7 +9,7 @@ using namespace std;
 
 int main27()
 {
-    Mat src = imread(picpath); // 以灰度模式加载图片
+    Mat src = imread(portraitpath); // 以灰度模式加载图片
     if (src.empty())
     {
         printf("加载图片失败...");

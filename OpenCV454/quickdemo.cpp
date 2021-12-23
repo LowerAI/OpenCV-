@@ -1,5 +1,10 @@
 #include "quickopencv.h"
+#include <opencv2/dnn.hpp>
+#include <direct.h>
 
+//extern string projectpath = $(ProjectDir);
+
+using namespace cv;
 using namespace std;
 
 void QuickDemo::colorSpace_Demo(Mat& image)
@@ -787,27 +792,29 @@ void QuickDemo::histogram_2d_demo(Mat& image)
 /// <param name="image"></param>
 void QuickDemo::histogram_eq_demo(Mat& image)
 {
+#pragma region    灰度图均衡化
     //Mat gray;
     //cvtColor(image, gray, COLOR_BGR2GRAY);
     //imshow("灰度图像", gray);
     //Mat dst;
     //equalizeHist(gray, dst); // 注意均衡化得src只接受灰度图
     //imshow("直方图均衡化演示", dst);
+#pragma endregion
 
+#pragma region    彩色图像均衡化
     Mat hsv;
     cvtColor(image, hsv, COLOR_BGR2HSV);
     vector<Mat> hsv_channels;
     split(hsv, hsv_channels);
-    Mat v = hsv_channels.at(2);
+    Mat v = hsv_channels[2];
+    equalizeHist(v, v);
+    int from_to[] = { 0,2 };
+    mixChannels(&v, 1, &hsv, 1, from_to, 1);
     Mat dst;
-    equalizeHist(v, dst);
-    //int from_to[] = { 0,2,1,1,2,0 };
-    //mixChannels(&image, 1, &dst, 1, from_to, 3);
-    merge(dst, hsv);
-    //dst.release(); // 重置dst
-    //cvtColor(hsv, dst, COLOR_HSV2BGR);
+    cvtColor(hsv, dst, COLOR_HSV2BGR);
 
     imshow("直方图均衡化演示", dst);
+#pragma endregion
 }
 
 /// <summary>
@@ -841,4 +848,82 @@ void QuickDemo::bifilter_demo(Mat& image)
     Mat dst;
     bilateralFilter(image, dst, 0, 100, 10);
     imshow("高斯双边模糊", dst);
+}
+
+/// <summary>
+/// 人脸检测
+/// </summary>
+/// <param name="image"></param>
+void QuickDemo::face_detection_demo(Mat& image)
+{
+    char buff[250];
+    _getcwd(buff, 250);  // 获取当前文件所在目录
+    
+    string root_dir = string(buff) + "\\face_detector\\";
+    //cout << root_dir << endl;
+    dnn::Net net = dnn::readNetFromTensorflow(root_dir + "opencv_face_detector_uint8.pb", root_dir + "opencv_face_detector.pbtxt");
+
+#pragma region    图片的人脸识别(效果糟糕)
+    Mat blob = dnn::blobFromImage(image, 1.0, Size(300, 300), Scalar(104, 177, 123), false, false);// 读模型
+    net.setInput(blob);// 准备数据 NCHW-Number,Channel,Height,Width
+    Mat probs = net.forward();// 推理输出
+    Mat detectionMat(probs.size[2], probs.size[3], CV_32F, probs.ptr<float>());
+    // 解析结果
+    int w = image.cols;
+    int h = image.rows;
+    for (int i = 0; i < detectionMat.rows; i++)
+    {
+        float confidence = detectionMat.at<float>(1, 2);
+        if (confidence > 0.5)
+        {
+            int x1 = static_cast<int>(detectionMat.at<float>(i, 3) * w);
+            int y1 = static_cast<int>(detectionMat.at<float>(i, 4) * h);
+            int x2 = static_cast<int>(detectionMat.at<float>(i, 5) * w);
+            int y2 = static_cast<int>(detectionMat.at<float>(i, 6) * h);
+            Rect box(x1, y1, x2 - x1, y2 - y1);
+            rectangle(image, box, Scalar(0, 0, 255), 2, 8, 0);
+        }
+    }
+    imshow("人脸检测演示", image);
+#pragma endregion
+
+#pragma region    视频的人脸识别(效果未达预期)
+    //VideoCapture capture("F:/非凡公主希瑞S1/非凡公主希瑞.She-Ra.and.the.Princesses.of.Power.S01E05.中英字幕.WEB.720P-人人影视.mp4");
+    //Mat frame;
+    //while (true)
+    //{
+    //    capture.read(frame);
+    //    if (frame.empty())
+    //    {
+    //        break;
+    //    }
+    //    Mat blob = dnn::blobFromImage(frame, 1.0, Size(300, 300), Scalar(104, 177, 123), false, false);// 读模型
+    //    net.setInput(blob);// 准备数据 NCHW-Number,Channel,Height,Width
+    //    Mat probs = net.forward();// 推理输出
+    //    Mat detectionMat(probs.size[2], probs.size[3], CV_32F, probs.ptr<float>());
+    //    // 解析结果
+    //    for (int i = 0; i < detectionMat.rows; i++)
+    //    {
+    //        float confidence = detectionMat.at<float>(1, 2);
+    //        if (confidence > 0.5)
+    //        {
+    //            int x1 = static_cast<int>(detectionMat.at<float>(i, 3) * frame.cols);
+    //            int y1 = static_cast<int>(detectionMat.at<float>(i, 4) * frame.rows);
+    //            int x2 = static_cast<int>(detectionMat.at<float>(i, 5) * frame.cols);
+    //            int y2 = static_cast<int>(detectionMat.at<float>(i, 6) * frame.rows);
+    //            Rect box(x1, y1, x2 - x1, y2 - y1);
+    //            rectangle(frame, box, Scalar(0, 0, 255), 2, 8, 0);
+    //        }
+    //    }
+    //    imshow("人脸检测演示", frame);
+
+    //    int c = waitKey(10);
+    //    if (c == 27)
+    //    {
+    //        break;
+    //    }
+    //}
+
+    //capture.release();
+#pragma endregion
 }
